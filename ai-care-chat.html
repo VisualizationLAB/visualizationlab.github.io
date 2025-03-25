@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Care Planner for Home Health Wound Care</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.ico">
+    <style>
+        /* Chat-specific styles */
+        .chat-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: #3a7bd5;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .chat-body {
+            display: flex;
+            height: 500px;
+        }
+
+        .chat-sidebar {
+            width: 30%;
+            background: #f7f9fc;
+            padding: 1rem;
+            border-right: 1px solid #eaeaea;
+            overflow-y: auto;
+        }
+
+        .chat-main {
+            width: 70%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: #f9f9f9;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.8rem;
+            border-radius: 8px;
+            max-width: 80%;
+        }
+
+        .user-message {
+            background: #e1f5fe;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+
+        .ai-message {
+            background: #f0f4c3;
+            align-self: flex-start;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 1rem;
+            background: white;
+            border-top: 1px solid #eaeaea;
+        }
+
+        .chat-input input {
+            flex-grow: 1;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 0.5rem;
+        }
+
+        .chat-input button {
+            background: #3a7bd5;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .assessment-form {
+            padding: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .submit-assessment {
+            background: #3a7bd5;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .care-plan {
+            background: #e8f5e9;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            border-left: 4px solid #43a047;
+        }
+
+        .care-plan h3 {
+            color: #2e7d32;
+            margin-top: 0;
+        }
+
+        .typing-indicator {
+            display: flex;
+            padding: 0.5rem;
+            align-items: center;
+        }
+
+        .typing-indicator span {
+            height: 8px;
+            width: 8px;
+            background: #3a7bd5;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 2px;
+            animation: typing 1s infinite ease-in-out;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0); }
+        }
+
+        .wound-data {
+            font-size: 0.9rem;
+            color: #555;
+            margin-top: 0.5rem;
+        }
+
+        .wound-category {
+            font-weight: bold;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <img src="images/tech-diva-logo.png" alt="Tech Diva Logo">
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">AI Chat</a></li>
+                <li><a href="information.html">Information</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+        <div class="hero-banner">
+            <img src="images/nurse-holding-patient-hand.jpg" alt="Nurse holding patient's hand">
+            <div class="hero-text">
+                <h1>AI Care Planner</h1>
+                <p>Advanced AI assistance for home health wound care management</p>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <div class="chat-container">
+            <div class="chat-header">
+                <h2>AI Care Planner Assistant</h2>
+                <p>Enter patient information to receive personalized wound care recommendations</p>
+            </div>
+            <div class="chat-body">
+                <div class="chat-sidebar">
+                    <div class="assessment-form">
+                        <h3>Patient Assessment</h3>
+                        <div class="form-group">
+                            <label for="patientAge">Patient Age</label>
+                            <input type="number" id="patientAge" min="1" max="120">
+                        </div>
+                        <div class="form-group">
+                            <label for="woundType">Wound Type</label>
+                            <select id="woundType">
+                                <option value="">Select type...</option>
+                                <option value="pressure">Pressure Ulcer</option>
+                                <option value="diabetic">Diabetic Ulcer</option>
+                                <option value="venous">Venous Ulcer</option>
+                                <option value="arterial">Arterial Ulcer</option>
+                                <option value="surgical">Surgical Wound</option>
+                                <option value="traumatic">Traumatic Wound</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="woundStage">Wound Stage/Grade</label>
+                            <select id="woundStage">
+                                <option value="">Select stage...</option>
+                                <option value="stage1">Stage I</option>
+                                <option value="stage2">Stage II</option>
+                                <option value="stage3">Stage III</option>
+                                <option value="stage4">Stage IV</option>
+                                <option value="unstageable">Unstageable</option>
+                                <option value="deepTissue">Deep Tissue Injury</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="woundLocation">Wound Location</label>
+                            <input type="text" id="woundLocation" placeholder="e.g., Sacrum, Heel, etc.">
+                        </div>
+                        <div class="form-group">
+                            <label for="woundSize">Wound Size (cm)</label>
+                            <input type="text" id="woundSize" placeholder="Length x Width x Depth">
+                        </div>
+                        <div class="form-group">
+                            <label for="exudateAmount">Exudate Amount</label>
+                            <select id="exudateAmount">
+                                <option value="">Select amount...</option>
+                                <option value="none">None</option>
+                                <option value="minimal">Minimal</option>
+                                <option value="moderate">Moderate</option>
+                                <option value="heavy">Heavy</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="complications">Complications</label>
+                            <select id="complications" multiple size="4">
+                                <option value="infection">Infection</option>
+                                <option value="diabetes">Diabetes</option>
+                                <option value="malnutrition">Malnutrition</option>
+                                <option value="vascularDisease">Vascular Disease</option>
+                                <option value="immunocompromised">Immunocompromised</option>
+                            </select>
+                            <small>Hold Ctrl/Cmd to select multiple</small>
+                        </div>
+                        <button id="submitAssessment" class="submit-assessment">Generate Care Plan</button>
+                    </div>
+                </div>
+                <div class="chat-main">
+                    <div id="chatMessages" class="chat-messages">
+                        <div class="message ai-message">
+                            Welcome to the AI Care Planner. Please fill out the patient assessment form to receive a personalized wound care plan. You can also ask specific questions about wound care in the chat below.
+                        </div>
+                    </div>
+                    <div class="chat-input">
+                        <input type="text" id="userInput" placeholder="Ask a question about wound care...">
+                        <button id="sendMessage">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="footer-logo">
+            <img src="images/tech-diva-logo.png" alt="Tech Diva Logo">
+        </div>
+        <div class="footer-content">
+            <p>&copy; 2025 Tech Diva. All rights reserved.</p>
+            <p class="tagline">< find your tribe ></p>
+            <p>Contact: hello@techdiva.com | <span class="hashtag">#build_code_confidence</span></p>
+        </div>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatMessages = document.getElementById('chatMessages');
+            const userInput = document.getElementById('userInput');
+            const sendButton = document.getElementById('sendMessage');
+            const submitAssessment = document.getElementById('submitAssessment');
+            
+            // Wound care knowledge base (simulated database)
+            const woundCareKnowledge = {
+                'pressure': {
+                    'stage1': 'Assess skin daily. Keep area clean and dry. Apply protective barrier cream. Reposition every 2 hours. Use pressure redistribution surface.',
+                    'stage2': 'Clean wound with saline solution. Apply hydrocolloid or foam dressing. Change dressing every 3-7 days or when leakage occurs. Reposition every 2 hours.',
+                    'stage3': 'Clean wound with saline solution. Pack wound with alginate or hydrogel. Cover with foam dressing. Change dressing daily or when saturated. Consider negative pressure wound therapy.',
+                    'stage4': 'Surgical consultation may be needed. Clean wound with saline solution. Pack wound with alginate or hydrogel. Cover with foam dressing. Change dressing daily or when saturated. Consider negative pressure wound therapy.',
+                    'unstageable': 'Do not remove eschar unless infected. Keep area clean and dry. Monitor for signs of infection. Surgical debridement may be needed.'
+                },
+                'diabetic': {
+                    'general': 'Offload pressure from wound. Clean with saline solution. Debride necrotic tissue. Apply hydrogel or foam dressing. Assess for infection. Monitor blood glucose levels.'
+                },
+                'venous': {
+                    'general': 'Clean with saline solution. Apply compression therapy (30-40 mmHg). Elevate legs above heart level. Apply zinc oxide impregnated bandage or foam dressing. Change dressing 2-3 times per week.'
+                },
+                'arterial': {
+                    'general': 'Protect wound with non-adherent dressing. Do not use compression. Keep wound clean and moist. Consult vascular surgeon for evaluation.'
+                },
+                'surgical': {
+                    'general': 'Clean with saline solution. Apply appropriate dressing based on exudate amount. Monitor for signs of infection. Remove sutures/staples as ordered.'
+                },
+                'traumatic': {
+                    'general': 'Clean with saline solution. Remove debris. Apply appropriate dressing based on wound type and exudate. Consider tetanus prophylaxis. Monitor for signs of infection.'
+                }
+            };
+            
+            // Common wound care questions and answers
+            const faqDatabase = {
+                'how often should dressings be changed': 'Dressing change frequency depends on the wound type and exudate amount. Generally:\n- Hydrocolloid: Every 3-7 days\n- Foam: Every 3-4 days\n- Alginate: When saturated or every 1-3 days\n- Hydrogel: Daily or every other day\n- Transparent film: Up to 7 days\nAlways change dressings if they become loose, saturated, or if there are signs of infection.',
+                
+                'signs of infection': 'Signs of wound infection include: increased pain, increased redness or warmth around the wound, swelling, purulent drainage (pus), foul odor, fever, and increased wound size. If infection is suspected, contact the healthcare provider immediately.',
+                
+                'pressure ulcer prevention': 'Pressure ulcer prevention strategies include: frequent repositioning (every 2 hours), use of pressure redistribution surfaces, daily skin assessment, keeping skin clean and dry, proper nutrition and hydration, and minimizing friction and shear forces.',
+                
+                'debridement methods': 'Common debridement methods include: autolytic (using the body\'s enzymes), enzymatic (topical enzymes), mechanical (wet-to-dry dressings, wound irrigation), sharp (using scalpel or scissors), and biological (maggot therapy). The method chosen depends on wound characteristics and patient factors.',
+                
+                'wound healing stages': 'The four stages of wound healing are:\n1. Hemostasis: Blood clotting forms a scab\n2. Inflammation: Increased blood flow and white blood cells clean the wound\n3. Proliferation: New tissue formation with granulation and contraction\n4. Maturation (Remodeling): Collagen reorganization and scar formation'
+            };
+            
+            // Add a message to the chat
+            function addMessage(text, isUser = false) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message');
+                messageDiv.classList.add(isUser ? 'user-message' : 'ai-message');
+                messageDiv.textContent = text;
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Show typing indicator
+            function showTypingIndicator() {
+                const indicator = document.createElement('div');
+                indicator.classList.add('message', 'ai-message', 'typing-indicator');
+                indicator.id = 'typingIndicator';
+                indicator.innerHTML = '<span></span><span></span><span></span>';
+                chatMessages.appendChild(indicator);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Remove typing indicator
+            function removeTypingIndicator() {
+                const indicator = document.getElementById('typingIndicator');
+                if (indicator) {
+                    indicator.remove();
+                }
+            }
+            
+            // Search knowledge base for answers
+            function searchKnowledge(query) {
+                query = query.toLowerCase();
+                
+                // Check FAQ database first
+                for (const key in faqDatabase) {
+                    if (query.includes(key)) {
+                        return faqDatabase[key];
+                    }
+                }
+                
+                // Check for wound type questions
+                const woundTypes = ['pressure', 'diabetic', 'venous', 'arterial', 'surgical', 'traumatic'];
+                for (const type of woundTypes) {
+                    if (query.includes(type)) {
+                        if (woundCareKnowledge[type]) {
+                            if (type === 'pressure') {
+                                // Try to determine stage for pressure ulcers
+                                const stages = ['stage1', 'stage2', 'stage3', 'stage4', 'unstageable'];
+                                for (const stage of stages) {
+                                    if (query.includes(stage.toLowerCase())) {
+                                        return `For ${type} ulcers, ${stage}: ${woundCareKnowledge[type][stage]}`;
+                                    }
+                                }
+                                // Default to general pressure ulcer info
+                                return `For pressure ulcers, treatment depends on the stage. Please specify the stage (I-IV, unstageable, or deep tissue injury) for more specific recommendations.`;
+                            } else {
+                                // Return general info for other wound types
+                                return `For ${type} wounds: ${woundCareKnowledge[type]['general']}`;
+                            }
+                        }
+                    }
+                }
+                
+                // Default response for unrecognized queries
+                return "I don't have specific information about that. Please ask about wound types (pressure, diabetic, venous, arterial, surgical, traumatic), dressing changes, signs of infection, prevention, or wound healing stages. You can also fill out the patient assessment form for a personalized care plan.";
+            }
+            
+            // Generate care plan based on assessment
+            function generateCarePlan() {
+                const patientAge = document.getElementById('patientAge').value;
+                const woundType = document.getElementById('woundType').value;
+                const woundStage = document.getElementById('woundStage').value;
+                const woundLocation = document.getElementById('woundLocation').value;
+                const woundSize = document.getElementById('woundSize').value;
+                const exudateAmount = document.getElementById('exudateAmount').value;
+                
+                // Get selected complications
+                const complicationsSelect = document.getElementById('complications');
+                const selectedComplications = Array.from(complicationsSelect.selectedOptions).map(option => option.value);
+                
+                // Validate form
+                if (!patientAge || !woundType || !woundLocation) {
+                    addMessage("Please fill in at least the patient age, wound type, and wound location to generate a care plan.", false);
+                    return;
+                }
+                
+                // Show typing indicator
+                showTypingIndicator();
+                
+                // Simulate AI processing
+                setTimeout(() => {
+                    removeTypingIndicator();
+                    
+                    // Create wound summary
+                    let woundSummary = `Patient Age: ${patientAge}\nWound Type: ${woundType}\nLocation: ${woundLocation}\n`;
+                    if (woundSize) woundSummary += `Size: ${woundSize}\n`;
+                    if (woundStage) woundSummary += `Stage: ${woundStage}\n`;
+                    if (exudateAmount) woundSummary += `Exudate: ${exudateAmount}\n`;
+                    if (selectedComplications.length > 0) woundSummary += `Complications: ${selectedComplications.join(', ')}\n`;
+                    
+                    // Get care recommendations
+                    let careRecommendations = "";
+                    if (woundType === 'pressure' && woundStage) {
+                        careRecommendations = woundCareKnowledge.pressure[woundStage];
+                    } else if (woundCareKnowledge[woundType]) {
+                        careRecommendations = woundCareKnowledge[woundType].general;
+                    } else {
+                        careRecommendations = "Unable to generate specific recommendations for this wound type. Please consult with a healthcare provider.";
+                    }
+                    
+                    // Additional recommendations based on complications
+                    let additionalRecommendations = "";
+                    if (selectedComplications.includes('infection')) {
+                        additionalRecommendations += "\n• Consider antimicrobial dressings and monitor for systemic infection signs.\n• Obtain wound culture if purulent drainage is present.\n• Consult with provider regarding antibiotic therapy.";
+                    }
+                    if (selectedComplications.includes('diabetes')) {
+                        additionalRecommendations += "\n• Ensure optimal glycemic control is maintained.\n• Monitor blood glucose levels regularly.\n• Evaluate for arterial insufficiency.\n• Consider offloading devices for foot wounds.";
+                    }
+                    if (selectedComplications.includes('malnutrition')) {
+                        additionalRecommendations += "\n• Initiate nutrition consultation.\n• Consider protein supplements.\n• Monitor albumin and prealbumin levels if possible.\n• Ensure adequate hydration.";
+                    }
+                    if (selectedComplications.includes('vascularDisease')) {
+                        additionalRecommendations += "\n• Consider vascular assessment.\n• Elevate extremities as appropriate.\n• Monitor for peripheral circulation changes.\n• Avoid excessive pressure on affected areas.";
+                    }
+                    
+                    // Create care plan message
+                    const carePlanDiv = document.createElement('div');
+                    carePlanDiv.classList.add('message', 'ai-message');
+                    
+                    // Format the care plan
+                    carePlanDiv.innerHTML = `
+                        <div class="care-plan">
+                            <h3>Personalized Wound Care Plan</h3>
+                            <div class="wound-data">
+                                <div class="wound-category">Patient Assessment Summary:</div>
+                                ${woundSummary.replace(/\n/g, '<br>')}
+                            </div>
+                            <div class="wound-category">Primary Care Recommendations:</div>
+                            ${careRecommendations}
+                            ${additionalRecommendations ? `<div class="wound-category">Additional Recommendations:</div>${additionalRecommendations}` : ''}
+                            <div class="wound-category">Follow Up:</div>
+                            Reassess wound at each dressing change. Document changes in wound appearance, size, and drainage. 
+                            Contact healthcare provider if signs of infection develop, wound deteriorates, or fails to show 
+                            improvement within 2 weeks.
+                        </div>
+                    `;
+                    
+                    chatMessages.appendChild(carePlanDiv);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 2000);
+            }
+            
+            // Event listener for sending messages
+            sendButton.addEventListener('click', function() {
+                const message = userInput.value.trim();
+                if (message) {
+                    addMessage(message, true);
+                    showTypingIndicator();
+                    
+                    // Simulate AI processing
+                    setTimeout(() => {
+                        removeTypingIndicator();
+                        const response = searchKnowledge(message);
+                        addMessage(response, false);
+                    }, 1000);
+                    
+                    userInput.value = '';
+                }
+            });
+            
+            // Event listener for enter key
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendButton.click();
+                }
+            });
+            
+            // Event listener for assessment form submission
+            submitAssessment.addEventListener('click', generateCarePlan);
+        });
+    </script>
+</body>
+</html>
