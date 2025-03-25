@@ -119,7 +119,7 @@ main {
     width: 200px;
     #border-radius: 50%;
     background-color: var(--light);
-    padding: 5px;
+    #padding: 5px;
 }
 
 .chat-header h1 {
