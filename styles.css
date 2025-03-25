@@ -115,8 +115,8 @@ main {
 }
 
 .chat-logo {
-    height: 200px;
-    width: 200px;
+    height: 500px;
+    width: 500px;
     #border-radius: 50%;
     background-color: var(--light);
     #padding: 5px;
