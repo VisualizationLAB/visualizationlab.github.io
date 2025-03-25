@@ -117,9 +117,9 @@ main {
 .chat-logo {
     height: 100px;
     width: 100px;
-    border-radius: 2%;
-    #background-color: var(--light);
-    #padding: 5px;
+    border-radius: 40%;
+    background-color: var(--light);
+    padding: 5px;
 }
 
 .chat-header h1 {
