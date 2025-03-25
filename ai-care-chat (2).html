@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Care Planner for Home Health Wound Care</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.ico">
+    <style>
+        /* Chat-specific styles */
+        .chat-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: #3a7bd5;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .chat-body {
+            display: flex;
+            height: 500px;
+        }
+
+        .chat-sidebar {
+            width: 30%;
+            background: #f7f9fc;
+            padding: 1rem;
+            border-right: 1px solid #eaeaea;
+            overflow-y: auto;
+        }
+
+        .chat-main {
+            width: 70%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-messages {
+            flex-grow: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: #f9f9f9;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.8rem;
+            border-radius: 8px;
+            max-width: 80%;
+        }
+
+        .user-message {
+            background: #e1f5fe;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+
+        .ai-message {
+            background: #f0f4c3;
+            align-self: flex-start;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 1rem;
+            background: white;
+            border-top: 1px solid #eaeaea;
+        }
+
+        .chat-input input {
+            flex-grow: 1;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 0.5rem;
+        }
+
+        .chat-input button {
+            background: #3a7bd5;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .assessment-form {
+            padding: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .submit-assessment {
+            background: #3a7bd5;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .care-plan {
+            background: #e8f5e9;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            border-left: 4px solid #43a047;
+        }
+
+        .care-plan h3 {
+            color: #2e7d32;
+            margin-top: 0;
+        }
+
+        .typing-indicator {
+            display: flex;
+            padding: 0.5rem;
+            align-items: center;
+        }
+
+        .typing-indicator span {
+            height: 8px;
+            width: 8px;
+            background: #3a7bd5;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 2px;
+            animation: typing 1s infinite ease-in-out;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0); }
+        }
+
+        .wound-data {
+            font-size: 0.9rem;
+            color: #555;
+            margin-top: 0.5rem;
+        }
+
+        .wound-category {
+            font-weight: bold;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <img src="images/tech-diva-logo.png" alt="Tech Diva Logo">
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">AI Chat</a></li>
+                <li><a href="information.html">Information</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+        <div class="hero-banner">
+            <img src="images/nurse-holding-patient-hand.jpg" alt="Nurse holding patient's hand">
+            <div class="hero-text">
+                <h1>AI Care Planner</h1>
+                <p>Advanced AI assistance for home health wound care management</p>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <div class="chat-container">
+            <div class="chat-header">
+                <h2>AI Care Planner Assistant</h2>
+                <p>Enter patient information to receive personalized wound care recommendations</p>
+            </div>
+            <div class="chat-body">
+                <div class="chat-sidebar">
+                    <div class="assessment-form">
+                        <h3>Patient Assessment</h3>
+                        <div class="form-group">
+                            <label for="patientAge">Patient Age</label>
+                            <input type="number" id="patientAge" min="1" max="120">
+                        </div>
+                        <div class="form-group">
+                            <label for="woundType">Wound Type</label>
+                            <select id="woundType">
+                                <option value="">Select type...</option>
+                                <option value="pressure">Pressure Ulcer</option>
+                                <option value="diabetic">Diabetic Ulcer</option>
+                                <option value="venous">Venous Ulcer</option>
+                                <option value="arterial">Arterial Ulcer</option>
+                                <option value="surgical">Surgical Wound</option>
+                                <option value="traumatic">Traumatic Wound</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="woundStage">Wound Stage/Grade</label>
+                            <select id="woundStage">
+                                <option value="">Select stage...</option>
+                                <option value="stage1">Stage I</option>
+                                <option value="stage2">Stage II</option>
+                                <option value="stage3">Stage III</option>
+                                <option value="stage4">Stage IV</option>
+                                <option value="unstageable">Unstageable</option>
+                                <option value="deepTissue">Deep Tissue Injury</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="woundLocation">Wound Location</label>
+                            <input type="text" id="woundLocation" placeholder="e.g., Sacrum, Heel, etc.">
+                        </div>
+                        <div class="form-group">
+                            <label for="woundSize">Wound Size (cm)</label>
+                            <input type="text" id="woundSize" placeholder="Length x Width x Depth">
+                        </div>
+                        <div class="form-group">
+                            <label for="exudateAmount">Exudate Amount</label>
+                            <select id="exudateAmount">
+                                <option value="">Select amount...</option>
+                                <option value="none">None</option>
+                                <option value="minimal">Minimal</option>
+                                <option value="moderate">Moderate</option>
+                                <option value="heavy">Heavy</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="complications">Complications</label>
+                            <select id="complications" multiple size="4">
+                                <option value="infection">Infection</option>
+                                <option value="diabetes">Diabetes</option>
+                                <option value="malnutrition">Malnutrition</option>
+                                <option value="vascularDisease">Vascular Disease</option>
+                                <option value="immunocompromised">Immunocompromised</option>
+                            </select>
+                            <small>Hold Ctrl/Cmd to select multiple</small>
+                        </div>
+                        <button id="submitAssessment" class="submit-assessment">Generate Care Plan</button>
+                    </div>
+                </div>
+                <div class="chat-main">
+                    <div id="chatMessages" class="chat-messages">
+                        <div class="message ai-message">
+                            Welcome to the AI Care Planner. Please fill out the patient assessment form to receive a personalized wound care plan. You can also ask specific questions about wound care in the chat below.
+                        </div>
+                    </div>
+                    <div class="chat-input">
+                        <input type="text" id="userInput" placeholder="Ask a question about wound care...">
+                        <button id="sendMessage">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="footer-logo">
+            <img src="images/tech-diva-logo.png" alt="Tech Diva Logo">
+        </div>
+        <div class="footer-content">
+            <p>&copy; 2025 Tech Diva. All rights reserved.</p>
+            <p class="tagline">< find your tribe ></p>
+            <p>Contact: hello@techdiva.com | <span class="hashtag">#build_code_confidence</span></p>
+        </div>
+    </footer>
+    
+    <!-- Include the wound care knowledge database -->
+    <script src="data/woundcare-db.js"></script>
+    <script src="js/chatbot.js"></script>
+    <script src="js/careplan.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatMessages = document.getElementById('chatMessages');
+            const userInput = document.getElementById('userInput');
+            const sendButton = document.getElementById('sendMessage');
+            const submitAssessment = document.getElementById('submitAssessment');
+            
+            // Create instances of the AI components
+            const chatbot = new WoundCareBot(woundCareKnowledge, faqDatabase);
+            const carePlanGenerator = new CarePlanGenerator(woundCareKnowledge);
+            
+            // Add a message to the chat
+            function addMessage(text, isUser = false) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message');
+                messageDiv.classList.add(isUser ? 'user-message' : 'ai-message');
+                messageDiv.textContent = text;
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Show typing indicator
+            function showTypingIndicator() {
+                const indicator = document.createElement('div');
+                indicator.classList.add('message', 'ai-message', 'typing-indicator');
+                indicator.id = 'typingIndicator';
+                indicator.innerHTML = '<span></span><span></span><span></span>';
+                chatMessages.appendChild(indicator);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // Remove typing indicator
+            function removeTypingIndicator() {
+                const indicator = document.getElementById('typingIndicator');
+                if (indicator) {
+                    indicator.remove();
+                }
+            }
+            
+            // Generate care plan based on assessment
+            function generateCarePlan() {
+                const patientData = {
+                    patientAge: document.getElementById('patientAge').value,
+                    woundType: document.getElementById('woundType').value,
+                    woundStage: document.getElementById('woundStage').value,
+                    woundLocation: document.getElementById('woundLocation').value,
+                    woundSize: document.getElementById('woundSize').value,
+                    exudateAmount: document.getElementById('exudateAmount').value,
+                    complications: Array.from(document.getElementById('complications').selectedOptions).map(option => option.value)
+                };
+                
+                // Validate form
+                if (!patientData.patientAge || !patientData.woundType || !patientData.woundLocation) {
+                    addMessage("Please fill in at least the patient age, wound type, and wound location to generate a care plan.", false);
+                    return;
+                }
+                
+                // Show typing indicator
+                showTypingIndicator();
+                
+                // Process with a slight delay to simulate AI thinking
+                setTimeout(() => {
+                    removeTypingIndicator();
+                    
+                    // Generate the care plan
+                    const carePlan = carePlanGenerator.generateCarePlan(patientData);
+                    
+                    if (!carePlan.success) {
+                        addMessage(carePlan.message, false);
+                        return;
+                    }
+                    
+                    // Create care plan message
+                    const carePlanDiv = document.createElement('div');
+                    carePlanDiv.classList.add('message', 'ai-message');
+                    
+                    // Format the care plan
+                    carePlanDiv.innerHTML = `
+                        <div class="care-plan">
+                            <h3>Personalized Wound Care Plan</h3>
+                            <div class="wound-data">
+                                <div class="wound-category">Patient Assessment Summary:</div>
+                                ${carePlan.summary.replace(/\n/g, '<br>')}
+                            </div>
+                            <div class="wound-category">Primary Care Recommendations:</div>
+                            ${carePlan.primaryRecommendations}
+                            ${carePlan.additionalRecommendations ? `<div class="wound-category">Additional Recommendations:</div>${carePlan.additionalRecommendations}` : ''}
+                            <div class="wound-category">Follow Up:</div>
+                            ${carePlan.followUp}
+                            ${carePlan.warnings ? `<div class="wound-category">Special Considerations:</div>${carePlan.warnings}` : ''}
+                        </div>
+                        <p><small><i>${carePlan.disclaimer}</i></small></p>
+                    `;
+                    
+                    chatMessages.appendChild(carePlanDiv);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 2000);
+            }
+            
+            // Event listener for sending messages
+            sendButton.addEventListener('click', function() {
+                const message = userInput.value.trim();
+                if (message) {
+                    addMessage(message, true);
+                    showTypingIndicator();
+                    
+                    // Process query with a slight delay to simulate thinking
+                    setTimeout(() => {
+                        removeTypingIndicator();
+                        const response = chatbot.processQuery(message);
+                        addMessage(response, false);
+                    }, 1000);
+                    
+                    userInput.value = '';
+                }
+            });
+            
+            // Event listener for enter key
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendButton.click();
+                }
+            });
+            
+            // Event listener for assessment form submission
+            submitAssessment.addEventListener('click', generateCarePlan);
+        });
+    </script>
+</body>
+</html>
