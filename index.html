@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Care Planner | Home Health Wound Care</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.ico">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <img src="images/tech-diva-logo.png" alt="Tech Diva Logo">
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">AI Chat</a></li>
+                <li><a href="information.html">Information</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main class="chat-interface">
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="header-content">
+                    <img src="images/tech-diva-logo.png" alt="Tech Diva Logo" class="chat-logo">
+                    <h1>AI Care Planner</h1>
+                </div>
+                <p class="subtitle">Your AI assistant for optimizing home health wound care plans</p>
+            </div>
+            
+            <div class="chat-messages" id="chat-messages">
+                <div class="message bot">
+                    <div class="message-content">
+                        <p>Hello! I'm your AI Care Planner assistant. I can help you create optimal care sequences for home health wound care patients. What information would you like to provide about your patient?</p>
+                    </div>
+                </div>
+                <!-- Messages will be dynamically added here -->
+            </div>
+            
+            <div class="chat-input">
+                <textarea id="user-input" placeholder="Type your question or patient information here..." rows="2"></textarea>
+                <button id="send-button" class="send-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"><path fill="none" d="M0 0h24v24H0z"/><path d="M1.946 9.315c-.522-.174-.527-.455.01-.634l19.087-6.362c.529-.176.832.12.684.638l-5.454 19.086c-.15.529-.455.547-.679.045L12 14l6-8-8 6-8.054-2.685z" fill="currentColor"/></svg>
+                </button>
+            </div>
+        </div>
+        
+        <div class="benefits-sidebar">
+            <h2>Why Use AI Care Planner?</h2>
+            <div class="benefit-item">
+                <div class="benefit-icon">📈</div>
+                <div class="benefit-text">
+                    <h3>Evidence-Based Sequencing</h3>
+                    <p>Uses data from thousands of similar cases to optimize care</p>
+                </div>
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-icon">🏥</div>
+                <div class="benefit-text">
+                    <h3>Reduce Readmissions</h3>
+                    <p>Lower hospital readmission rates through optimized care plans</p>
+                </div>
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-icon">👥</div>
+                <div class="benefit-text">
+                    <h3>Personalized Care</h3>
+                    <p>Tailored recommendations for each patient's unique needs</p>
+                </div>
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-icon">⏱️</div>
+                <div class="benefit-text">
+                    <h3>Save Time</h3>
+                    <p>Generate comprehensive care plans in seconds</p>
+                </div>
+            </div>
+            
+            <a href="information.html" class="learn-more-button">Learn More</a>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="footer-logo">
+            <img src="images/tech-diva-logo.png" alt="Tech Diva Logo">
+        </div>
+        <div class="footer-content">
+            <p>&copy; 2025 Tech Diva. All rights reserved.</p>
+            <p class="tagline">< find your tribe ></p>
+            <p>Contact: hello@techdiva.com | <span class="hashtag">#build_code_confidence</span></p>
+        </div>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatMessages = document.getElementById('chat-messages');
+            const userInput = document.getElementById('user-input');
+            const sendButton = document.getElementById('send-button');
+            
+            // Sample responses for the AI
+            const aiResponses = [
+                "Based on the wound assessment and patient history, I recommend starting with daily skilled nursing visits for the first week.",
+                "I've analyzed similar cases and recommend PT evaluation after the initial wound treatment shows signs of healing, typically around day 10.",
+                "For this type of wound, evidence suggests alternating between skilled nursing and PT visits can improve outcomes while reducing resource utilization.",
+                "Based on the medical literature and our internal data, this care sequence has shown a 37% reduction in hospital readmissions for similar patients.",
+                "I recommend scheduling skilled nursing visits on Monday, Wednesday, Friday, with PT on Tuesday and Thursday for optimal recovery trajectory.",
+                "Given the patient's comorbidities, I suggest adding weekly occupational therapy sessions to address functional limitations that may affect wound healing.",
+                "The data indicates this wound type typically requires 3-4 weeks of care with tapering frequency as healing progresses."
+            ];
+            
+            function addMessage(content, isUser) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = isUser ? 'message user' : 'message bot';
+                
+                const messageContent = document.createElement('div');
+                messageContent.className = 'message-content';
+                
+                const paragraph = document.createElement('p');
+                paragraph.textContent = content;
+                
+                messageContent.appendChild(paragraph);
+                messageDiv.appendChild(messageContent);
+                chatMessages.appendChild(messageDiv);
+                
+                // Scroll to bottom of chat
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            function getBotResponse() {
+                // Get random response from array
+                return aiResponses[Math.floor(Math.random() * aiResponses.length)];
+            }
+            
+            function sendMessage() {
+                const message = userInput.value.trim();
+                if (message) {
+                    // Add user message
+                    addMessage(message, true);
+                    userInput.value = '';
+                    
+                    // Simulate AI thinking with a delay
+                    setTimeout(() => {
+                        // Add AI response
+                        addMessage(getBotResponse(), false);
+                    }, 1000);
+                }
+            }
+            
+            // Event listeners
+            sendButton.addEventListener('click', sendMessage);
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            // Auto-resize textarea as user types
+            userInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+        });
+    </script>
+</body>
+</html>
